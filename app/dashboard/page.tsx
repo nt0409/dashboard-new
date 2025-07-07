@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { signOut } from '@/lib/supabase';
+// import { signOut } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import FollowUpsTable from '@/components/FollowUpsTable';
 import TasksTable from '@/components/TasksTable';
@@ -10,20 +10,20 @@ import ColdEmailsTable from '@/components/ColdEmailsTable';
 import InboundEmailsTable from '@/components/InboundEmailsTable';
 import ScheduledEventsTable from '@/components/ScheduledEventsTable';
 
-function SignOutButton() {
-  const router = useRouter();
-  return (
-    <button
-      className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 shadow"
-      onClick={async () => {
-        await signOut();
-        router.push('/login');
-      }}
-    >
-      Sign Out
-    </button>
-  );
-}
+// function SignOutButton() {
+//   const router = useRouter();
+//   return (
+//     <button
+//       className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 shadow"
+//       onClick={async () => {
+//         await signOut();
+//         router.push('/login');
+//       }}
+//     >
+//       Sign Out
+//     </button>
+//   );
+// }
 
 function TableSkeleton({ columns, rows = 3 }: { columns: number; rows?: number }) {
   return (
@@ -170,7 +170,7 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto py-8 relative">
-      <SignOutButton />
+      {/* <SignOutButton /> */}
       <h1 className="text-3xl font-bold mb-6 text-center tracking-tight">AI Agent Gmail Automation Dashboard</h1>
       <Card className="p-6 mb-8 shadow-lg">
         <Tabs defaultValue="cold-emails" className="w-full">
