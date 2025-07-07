@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -11,21 +13,43 @@ export default function LoginPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setMessage(null);
-    if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) setError(error.message);
-      else setMessage('Check your email for a confirmation link!');
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(error.message);
-      else setMessage('Logged in!');
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  setMessage(null);
+
+  if (isSignUp) {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) setError(error.message);
+    else setMessage('Check your email for a confirmation link!');
+  } else {
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+
+      const response = await fetch("http://127.0.0.1:8000/login", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "Login failed");
+      }
+
+      const result = await response.json();
+      setMessage(result.message);
+      localStorage.setItem("token", result.token);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message);
     }
-    setLoading(false);
-  };
+  }
+
+  setLoading(false);
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
